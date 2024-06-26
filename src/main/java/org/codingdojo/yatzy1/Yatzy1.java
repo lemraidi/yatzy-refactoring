@@ -1,6 +1,9 @@
 package org.codingdojo.yatzy1;
 
 import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Yatzy1 {
 
@@ -47,20 +50,16 @@ public class Yatzy1 {
         return Arrays.stream(dice).distinct().count() == 1 ? 50 : 0;
     }
 
-    public int score_pair() {
-        int[] counts = new int[6];
-        counts[dice[0] - 1]++;
-        counts[dice[1] - 1]++;
-        counts[dice[2] - 1]++;
-        counts[dice[3] - 1]++;
-        counts[dice[4] - 1]++;
-        int at;
-        for (at = 0; at != 6; at++) {
-            if (counts[6 - at - 1] >= 2) {
-                return (6 - at) * 2;
-            }
-        }
-        return 0;
+    public int pair() {
+        Map<Integer, Long> frequencyMap = Arrays.stream(dice)
+                .boxed()
+                .collect(Collectors.groupingBy(d -> d, Collectors.counting()));
+        return frequencyMap.entrySet().stream()
+                .filter(entry -> entry.getValue() >= 2)
+                .max(Comparator.comparingInt(Map.Entry::getKey))
+                .map(Map.Entry::getKey)
+                .map(value -> value * 2)
+                .orElse(0);
     }
 
     public int two_pair() {
