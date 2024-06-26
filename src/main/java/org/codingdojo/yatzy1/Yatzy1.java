@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 public class Yatzy1 {
 
-    protected int[] dice;
+    private final int[] dice;
 
     public Yatzy1(int d1, int d2, int d3, int d4, int d5) {
         dice = new int[5];
@@ -19,74 +19,41 @@ public class Yatzy1 {
         return Arrays.stream(dice).sum();
     }
 
-    public int yatzy() {
-        int[] counts = new int[6];
-        for (int die : dice)
-            counts[die - 1]++;
-        for (int i = 0; i != 6; i++)
-            if (counts[i] == 5)
-                return 50;
-        return 0;
-    }
-
     public int ones() {
-        int sum = 0;
-        if (dice[0] == 1) sum++;
-        if (dice[1] == 1) sum++;
-        if (dice[2] == 1) sum++;
-        if (dice[3] == 1) sum++;
-        if (dice[4] == 1)
-            sum++;
-        return sum;
+        return getScoreByCategory(1);
     }
 
     public int twos() {
-        int sum = 0;
-        if (dice[0] == 2) sum += 2;
-        if (dice[1] == 2) sum += 2;
-        if (dice[2] == 2) sum += 2;
-        if (dice[3] == 2) sum += 2;
-        if (dice[4] == 2) sum += 2;
-        return sum;
+        return getScoreByCategory(2);
     }
 
     public int threes() {
-        int s;
-        s = 0;
-        if (dice[0] == 3) s += 3;
-        if (dice[1] == 3) s += 3;
-        if (dice[2] == 3) s += 3;
-        if (dice[3] == 3) s += 3;
-        if (dice[4] == 3) s += 3;
-        return s;
+        return getScoreByCategory(3);
     }
 
     public int fours() {
-        int sum;
-        sum = 0;
-        for (int at = 0; at != 5; at++) {
-            if (dice[at] == 4) {
-                sum += 4;
-            }
-        }
-        return sum;
+        return getScoreByCategory(4);
     }
 
     public int fives() {
-        int s = 0;
-        int i;
-        for (i = 0; i < dice.length; i++)
-            if (dice[i] == 5)
-                s = s + 5;
-        return s;
+        return getScoreByCategory(5);
     }
 
     public int sixes() {
-        int sum = 0;
-        for (int at = 0; at < dice.length; at++)
-            if (dice[at] == 6)
-                sum = sum + 6;
-        return sum;
+        return getScoreByCategory(6);
+    }
+
+    public int yatzy() {
+        int[] counts = new int[6];
+        for (int die : dice) {
+            counts[die - 1]++;
+        }
+        for (int i = 0; i != 6; i++) {
+            if (counts[i] == 5) {
+                return 50;
+            }
+        }
+        return 0;
     }
 
     public int score_pair() {
@@ -97,9 +64,11 @@ public class Yatzy1 {
         counts[dice[3] - 1]++;
         counts[dice[4] - 1]++;
         int at;
-        for (at = 0; at != 6; at++)
-            if (counts[6 - at - 1] >= 2)
+        for (at = 0; at != 6; at++) {
+            if (counts[6 - at - 1] >= 2) {
                 return (6 - at) * 2;
+            }
+        }
         return 0;
     }
 
@@ -112,15 +81,17 @@ public class Yatzy1 {
         counts[dice[4] - 1]++;
         int n = 0;
         int score = 0;
-        for (int i = 0; i < 6; i += 1)
+        for (int i = 0; i < 6; i += 1) {
             if (counts[6 - i - 1] >= 2) {
                 n++;
                 score += (6 - i);
             }
-        if (n == 2)
+        }
+        if (n == 2) {
             return score * 2;
-        else
+        } else {
             return 0;
+        }
     }
 
     public int four_of_a_kind() {
@@ -131,9 +102,11 @@ public class Yatzy1 {
         tallies[dice[2] - 1]++;
         tallies[dice[3] - 1]++;
         tallies[dice[4] - 1]++;
-        for (int i = 0; i < 6; i++)
-            if (tallies[i] >= 4)
+        for (int i = 0; i < 6; i++) {
+            if (tallies[i] >= 4) {
                 return (i + 1) * 4;
+            }
+        }
         return 0;
     }
 
@@ -145,9 +118,11 @@ public class Yatzy1 {
         t[dice[2] - 1]++;
         t[dice[3] - 1]++;
         t[dice[4] - 1]++;
-        for (int i = 0; i < 6; i++)
-            if (t[i] >= 3)
+        for (int i = 0; i < 6; i++) {
+            if (t[i] >= 3) {
                 return (i + 1) * 3;
+            }
+        }
         return 0;
     }
 
@@ -218,5 +193,9 @@ public class Yatzy1 {
             return _2_at * 2 + _3_at * 3;
         else
             return 0;
+    }
+
+    private int getScoreByCategory(int category) {
+        return Arrays.stream(dice).filter(value -> value == category).sum();
     }
 }
