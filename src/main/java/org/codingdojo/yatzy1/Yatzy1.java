@@ -21,7 +21,7 @@ public class Yatzy1 {
     }
 
     public int chance() {
-        return Arrays.stream(dice).sum();
+        return getSumOfAllDice();
     }
 
     public int ones() {
@@ -76,10 +76,9 @@ public class Yatzy1 {
         return getScoreByOccurrence(4);
     }
 
-    public int three_of_a_kind() {
+    public int threeOfAKind() {
         return getScoreByOccurrence(3);
     }
-
 
     private Integer getScoreByOccurrence(int occurrence) {
         return frequencies.entrySet().stream()
@@ -105,37 +104,10 @@ public class Yatzy1 {
     }
 
     public int fullHouse() {
-        int[] tallies;
-        boolean _2 = false;
-        int i;
-        int _2_at = 0;
-        boolean _3 = false;
-        int _3_at = 0;
-
-
-        tallies = new int[6];
-        tallies[dice[0] - 1] += 1;
-        tallies[dice[1] - 1] += 1;
-        tallies[dice[2] - 1] += 1;
-        tallies[dice[3] - 1] += 1;
-        tallies[dice[4] - 1] += 1;
-
-        for (i = 0; i != 6; i += 1)
-            if (tallies[i] == 2) {
-                _2 = true;
-                _2_at = i + 1;
-            }
-
-        for (i = 0; i != 6; i += 1)
-            if (tallies[i] == 3) {
-                _3 = true;
-                _3_at = i + 1;
-            }
-
-        if (_2 && _3)
-            return _2_at * 2 + _3_at * 3;
-        else
-            return 0;
+        if (frequencies.containsValue(2L) && frequencies.containsValue(3L)) {
+            return getSumOfAllDice();
+        }
+        return 0;
     }
 
     private int getScoreByCategory(int category) {
@@ -146,5 +118,9 @@ public class Yatzy1 {
         return Arrays.stream(dice)
                 .boxed()
                 .collect(Collectors.groupingBy(d -> d, Collectors.counting()));
+    }
+
+    private int getSumOfAllDice() {
+        return Arrays.stream(dice).sum();
     }
 }

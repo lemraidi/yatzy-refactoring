@@ -83,9 +83,9 @@ public class Yatzy1Test {
 
     @Test
     public void three_of_a_kind() {
-        assertEquals(9, new Yatzy1(3, 3, 3, 4, 5).three_of_a_kind());
-        assertEquals(15, new Yatzy1(5, 3, 5, 4, 5).three_of_a_kind());
-        assertEquals(9, new Yatzy1(3, 3, 3, 3, 5).three_of_a_kind());
+        assertEquals(9, new Yatzy1(3, 3, 3, 4, 5).threeOfAKind());
+        assertEquals(15, new Yatzy1(5, 3, 5, 4, 5).threeOfAKind());
+        assertEquals(9, new Yatzy1(3, 3, 3, 3, 5).threeOfAKind());
 
     }
 
@@ -117,5 +117,6 @@ public class Yatzy1Test {
     public void fullHouse() {
         assertEquals(18, new Yatzy1(6, 2, 2, 2, 6).fullHouse());
         assertEquals(0, new Yatzy1(2, 3, 4, 5, 6).fullHouse());
+        assertEquals(0, new Yatzy1(4, 4, 4, 4, 6).fullHouse());
     }
 }
