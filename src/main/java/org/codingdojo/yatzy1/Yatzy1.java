@@ -91,37 +91,17 @@ public class Yatzy1 {
     }
 
     public int smallStraight() {
-        int[] tallies;
-        tallies = new int[6];
-        tallies[dice[0] - 1] += 1;
-        tallies[dice[1] - 1] += 1;
-        tallies[dice[2] - 1] += 1;
-        tallies[dice[3] - 1] += 1;
-        tallies[dice[4] - 1] += 1;
-        if (tallies[0] == 1 &&
-                tallies[1] == 1 &&
-                tallies[2] == 1 &&
-                tallies[3] == 1 &&
-                tallies[4] == 1)
-            return 15;
-        return 0;
+        if (frequencies.size() != 5 || frequencies.containsKey(6)) {
+            return 0;
+        }
+        return 15;
     }
 
     public int largeStraight() {
-        int[] tallies;
-        tallies = new int[6];
-        tallies[dice[0] - 1] += 1;
-        tallies[dice[1] - 1] += 1;
-        tallies[dice[2] - 1] += 1;
-        tallies[dice[3] - 1] += 1;
-        tallies[dice[4] - 1] += 1;
-        if (tallies[1] == 1 &&
-                tallies[2] == 1 &&
-                tallies[3] == 1 &&
-                tallies[4] == 1
-                && tallies[5] == 1)
-            return 20;
-        return 0;
+        if (frequencies.size() != 5 || frequencies.containsKey(1)) {
+            return 0;
+        }
+        return 20;
     }
 
     public int fullHouse() {

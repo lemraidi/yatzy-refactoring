@@ -101,6 +101,7 @@ public class Yatzy1Test {
         assertEquals(15, new Yatzy1(1, 2, 3, 4, 5).smallStraight());
         assertEquals(15, new Yatzy1(2, 3, 4, 5, 1).smallStraight());
         assertEquals(0, new Yatzy1(1, 2, 2, 4, 5).smallStraight());
+        assertEquals(0, new Yatzy1(2, 3, 4, 5, 6).smallStraight());
     }
 
     @Test
@@ -108,6 +109,8 @@ public class Yatzy1Test {
         assertEquals(20, new Yatzy1(6, 2, 3, 4, 5).largeStraight());
         assertEquals(20, new Yatzy1(2, 3, 4, 5, 6).largeStraight());
         assertEquals(0, new Yatzy1(1, 2, 2, 4, 5).largeStraight());
+        assertEquals(0, new Yatzy1(1, 2, 3, 4, 5).largeStraight());
+
     }
 
     @Test
