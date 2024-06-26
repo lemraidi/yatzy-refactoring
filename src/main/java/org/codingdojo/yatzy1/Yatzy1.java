@@ -51,10 +51,8 @@ public class Yatzy1 {
     }
 
     public int pair() {
-        Map<Integer, Long> frequencyMap = Arrays.stream(dice)
-                .boxed()
-                .collect(Collectors.groupingBy(d -> d, Collectors.counting()));
-        return frequencyMap.entrySet().stream()
+        Map<Integer, Long> frequencies = createFrequencyMap();
+        return frequencies.entrySet().stream()
                 .filter(entry -> entry.getValue() >= 2)
                 .max(Comparator.comparingInt(Map.Entry::getKey))
                 .map(Map.Entry::getKey)
@@ -62,26 +60,15 @@ public class Yatzy1 {
                 .orElse(0);
     }
 
-    public int two_pair() {
-        int[] counts = new int[6];
-        counts[dice[0] - 1]++;
-        counts[dice[1] - 1]++;
-        counts[dice[2] - 1]++;
-        counts[dice[3] - 1]++;
-        counts[dice[4] - 1]++;
-        int n = 0;
-        int score = 0;
-        for (int i = 0; i < 6; i += 1) {
-            if (counts[6 - i - 1] >= 2) {
-                n++;
-                score += (6 - i);
-            }
+    public int twoPairs() {
+        int[] pairs = createFrequencyMap().entrySet().stream()
+                .filter(entry -> entry.getValue() >= 2)
+                .mapToInt(Map.Entry::getKey)
+                .toArray();
+        if (pairs.length == 2) {
+            return Arrays.stream(pairs).sum() * 2;
         }
-        if (n == 2) {
-            return score * 2;
-        } else {
-            return 0;
-        }
+        return 0;
     }
 
     public int four_of_a_kind() {
@@ -187,5 +174,11 @@ public class Yatzy1 {
 
     private int getScoreByCategory(int category) {
         return Arrays.stream(dice).filter(value -> value == category).sum();
+    }
+
+    private Map<Integer, Long> createFrequencyMap() {
+        return Arrays.stream(dice)
+                .boxed()
+                .collect(Collectors.groupingBy(d -> d, Collectors.counting()));
     }
 }
