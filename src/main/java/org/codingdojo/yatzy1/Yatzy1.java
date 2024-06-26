@@ -7,16 +7,12 @@ import java.util.stream.Collectors;
 
 public class Yatzy1 {
 
-    private final int[] dice;
     private final Map<Integer, Long> frequencies;
+    private final DiceRolls roll;
 
-    public Yatzy1(int d1, int d2, int d3, int d4, int d5) {
-        dice = new int[5];
-        dice[0] = d1;
-        dice[1] = d2;
-        dice[2] = d3;
-        dice[3] = d4;
-        dice[4] = d5;
+    public Yatzy1(DiceRolls diceRoll) {
+        this.roll = diceRoll;
+        ;
         frequencies = createFrequencyMap();
     }
 
@@ -49,7 +45,7 @@ public class Yatzy1 {
     }
 
     public int yatzy() {
-        return Arrays.stream(dice).distinct().count() == 1 ? 50 : 0;
+        return roll.stream().distinct().count() == 1 ? 50 : 0;
     }
 
     public int pair() {
@@ -111,16 +107,16 @@ public class Yatzy1 {
     }
 
     private int getScoreByCategory(int category) {
-        return Arrays.stream(dice).filter(value -> value == category).sum();
+        return roll.stream().filter(value -> value == category).sum();
     }
 
     private Map<Integer, Long> createFrequencyMap() {
-        return Arrays.stream(dice)
+        return roll.stream()
                 .boxed()
                 .collect(Collectors.groupingBy(d -> d, Collectors.counting()));
     }
 
     private int getSumOfAllDice() {
-        return Arrays.stream(dice).sum();
+        return roll.stream().sum();
     }
 }
