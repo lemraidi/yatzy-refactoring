@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 public class Yatzy1 {
 
     private final int[] dice;
+    private final Map<Integer, Long> frequencies;
 
     public Yatzy1(int d1, int d2, int d3, int d4, int d5) {
         dice = new int[5];
@@ -16,6 +17,7 @@ public class Yatzy1 {
         dice[2] = d3;
         dice[3] = d4;
         dice[4] = d5;
+        frequencies = createFrequencyMap();
     }
 
     public int chance() {
@@ -51,7 +53,6 @@ public class Yatzy1 {
     }
 
     public int pair() {
-        Map<Integer, Long> frequencies = createFrequencyMap();
         return frequencies.entrySet().stream()
                 .filter(entry -> entry.getValue() >= 2)
                 .max(Comparator.comparingInt(Map.Entry::getKey))
@@ -61,7 +62,7 @@ public class Yatzy1 {
     }
 
     public int twoPairs() {
-        int[] pairs = createFrequencyMap().entrySet().stream()
+        int[] pairs = frequencies.entrySet().stream()
                 .filter(entry -> entry.getValue() >= 2)
                 .mapToInt(Map.Entry::getKey)
                 .toArray();
@@ -71,38 +72,23 @@ public class Yatzy1 {
         return 0;
     }
 
-    public int four_of_a_kind() {
-        int[] tallies;
-        tallies = new int[6];
-        tallies[dice[0] - 1]++;
-        tallies[dice[1] - 1]++;
-        tallies[dice[2] - 1]++;
-        tallies[dice[3] - 1]++;
-        tallies[dice[4] - 1]++;
-        for (int i = 0; i < 6; i++) {
-            if (tallies[i] >= 4) {
-                return (i + 1) * 4;
-            }
-        }
-        return 0;
+    public int fourOfAKind() {
+        return getScoreByOccurrence(4);
     }
 
     public int three_of_a_kind() {
-        int[] t;
-        t = new int[6];
-        t[dice[0] - 1]++;
-        t[dice[1] - 1]++;
-        t[dice[2] - 1]++;
-        t[dice[3] - 1]++;
-        t[dice[4] - 1]++;
-        for (int i = 0; i < 6; i++) {
-            if (t[i] >= 3) {
-                return (i + 1) * 3;
-            }
-        }
-        return 0;
+        return getScoreByOccurrence(3);
     }
 
+
+    private Integer getScoreByOccurrence(int occurrence) {
+        return frequencies.entrySet().stream()
+                .filter(entry -> entry.getValue() >= occurrence)
+                .map(Map.Entry::getKey)
+                .findFirst()
+                .map(value -> value * occurrence)
+                .orElse(0);
+    }
 
     public int smallStraight() {
         int[] tallies;

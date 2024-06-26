@@ -90,10 +90,10 @@ public class Yatzy1Test {
     }
 
     @Test
-    public void four_of_a_knd() {
-        assertEquals(12, new Yatzy1(3, 3, 3, 3, 5).four_of_a_kind());
-        assertEquals(20, new Yatzy1(5, 5, 5, 4, 5).four_of_a_kind());
-        assertEquals(12, new Yatzy1(3, 3, 3, 3, 3).four_of_a_kind());
+    public void four_of_a_kind() {
+        assertEquals(12, new Yatzy1(3, 3, 3, 3, 5).fourOfAKind());
+        assertEquals(20, new Yatzy1(5, 5, 5, 4, 5).fourOfAKind());
+        assertEquals(12, new Yatzy1(3, 3, 3, 3, 3).fourOfAKind());
     }
 
     @Test
