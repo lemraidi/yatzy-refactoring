@@ -7,50 +7,51 @@ import java.util.stream.Collectors;
 
 public class Yatzy1 {
 
+    private static final long PAIR = 2L;
+    private static final long TRIAD = 3L;
     private final Map<Integer, Long> frequencies;
-    private final DiceRolls roll;
+    private final DiceRolls rolls;
 
-    public Yatzy1(DiceRolls diceRoll) {
-        this.roll = diceRoll;
-        ;
-        frequencies = createFrequencyMap();
+    public Yatzy1(DiceRolls rolls) {
+        this.rolls = rolls;
+        this.frequencies = createFrequencyMap();
     }
 
     public int chance() {
-        return getSumOfAllDice();
+        return getSumOfAllSides();
     }
 
     public int ones() {
-        return getScoreByCategory(1);
+        return getScoreBySide(DiceSide.ONE);
     }
 
     public int twos() {
-        return getScoreByCategory(2);
+        return getScoreBySide(DiceSide.TWO);
     }
 
     public int threes() {
-        return getScoreByCategory(3);
+        return getScoreBySide(DiceSide.THREE);
     }
 
     public int fours() {
-        return getScoreByCategory(4);
+        return getScoreBySide(DiceSide.FOUR);
     }
 
     public int fives() {
-        return getScoreByCategory(5);
+        return getScoreBySide(DiceSide.FIVE);
     }
 
     public int sixes() {
-        return getScoreByCategory(6);
+        return getScoreBySide(DiceSide.SIX);
     }
 
     public int yatzy() {
-        return roll.stream().distinct().count() == 1 ? 50 : 0;
+        return rolls.stream().distinct().count() == 1 ? 50 : 0;
     }
 
     public int pair() {
         return frequencies.entrySet().stream()
-                .filter(entry -> entry.getValue() >= 2)
+                .filter(entry -> entry.getValue() >= PAIR)
                 .max(Comparator.comparingInt(Map.Entry::getKey))
                 .map(Map.Entry::getKey)
                 .map(value -> value * 2)
@@ -59,7 +60,7 @@ public class Yatzy1 {
 
     public int twoPairs() {
         int[] pairs = frequencies.entrySet().stream()
-                .filter(entry -> entry.getValue() >= 2)
+                .filter(entry -> entry.getValue() >= PAIR)
                 .mapToInt(Map.Entry::getKey)
                 .toArray();
         if (pairs.length == 2) {
@@ -100,23 +101,23 @@ public class Yatzy1 {
     }
 
     public int fullHouse() {
-        if (frequencies.containsValue(2L) && frequencies.containsValue(3L)) {
-            return getSumOfAllDice();
+        if (frequencies.containsValue(PAIR) && frequencies.containsValue(TRIAD)) {
+            return getSumOfAllSides();
         }
         return 0;
     }
 
-    private int getScoreByCategory(int category) {
-        return roll.stream().filter(value -> value == category).sum();
+    private int getScoreBySide(DiceSide side) {
+        return rolls.stream().filter(value -> value == side.getValue()).sum();
     }
 
     private Map<Integer, Long> createFrequencyMap() {
-        return roll.stream()
+        return rolls.stream()
                 .boxed()
                 .collect(Collectors.groupingBy(d -> d, Collectors.counting()));
     }
 
-    private int getSumOfAllDice() {
-        return roll.stream().sum();
+    private int getSumOfAllSides() {
+        return rolls.stream().sum();
     }
 }

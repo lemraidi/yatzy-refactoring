@@ -1,126 +1,321 @@
 package org.codingdojo.yatzy1;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.stream.Stream;
+
+import static org.codingdojo.yatzy1.DiceSide.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 public class Yatzy1Test {
 
-    @Test
-    public void accepts_only_dice_side_between_one_and_six() {
-        assertThrows(IllegalArgumentException.class, () -> new Yatzy1(new DiceRolls(-1, 2, 3, 6, 1)));
-        assertThrows(IllegalArgumentException.class, () -> new Yatzy1(new DiceRolls(8, 2, 3, 6, 1)));
+
+    @ParameterizedTest
+    @MethodSource("provideRollsForChance")
+    public void chance_scores_sum_of_all_sides(DiceSide first, DiceSide second, DiceSide third, DiceSide fourth, DiceSide fifth, int expected) {
+        assertEquals(expected, new Yatzy1(DiceRolls
+                .first(first)
+                .second(second)
+                .third(third)
+                .fourth(fourth)
+                .fifth(fifth)
+        ).chance());
+    }
+
+    private static Stream<Arguments> provideRollsForChance() {
+        return Stream.of(
+                Arguments.of(TWO, THREE, FOUR, FIVE, ONE, 15),
+                Arguments.of(THREE, THREE, FOUR, FIVE, ONE, 16)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideRollsForYatzy")
+    public void yatzy_scores_50_when_all_rolls_are_the_same(DiceSide first, DiceSide second, DiceSide third, DiceSide fourth, DiceSide fifth, int expected) {
+        assertEquals(expected, new Yatzy1(DiceRolls
+                .first(first)
+                .second(second)
+                .third(third)
+                .fourth(fourth)
+                .fifth(fifth)
+        ).yatzy());
+    }
+
+    private static Stream<Arguments> provideRollsForYatzy() {
+        return Stream.of(
+                Arguments.of(FOUR, FOUR, FOUR, FOUR, FOUR, 50),
+                Arguments.of(SIX, SIX, SIX, SIX, SIX, 50),
+                Arguments.of(SIX, SIX, SIX, SIX, THREE, 0)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideRollsForOnes")
+    public void ones_scores_the_the_sum_of_ones(DiceSide first, DiceSide second, DiceSide third, DiceSide fourth, DiceSide fifth, int expected) {
+        assertEquals(expected, new Yatzy1(DiceRolls
+                .first(first)
+                .second(second)
+                .third(third)
+                .fourth(fourth)
+                .fifth(fifth)
+        ).ones());
+    }
+
+    private static Stream<Arguments> provideRollsForOnes() {
+        return Stream.of(
+                Arguments.of(ONE, TWO, THREE, FOUR, FIVE, 1),
+                Arguments.of(ONE, TWO, ONE, FOUR, FIVE, 2),
+                Arguments.of(SIX, TWO, TWO, FOUR, FIVE, 0),
+                Arguments.of(ONE, TWO, ONE, ONE, ONE, 4)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideRollsForTwos")
+    public void twos_scores_the_sum_of_twos(DiceSide first, DiceSide second, DiceSide third, DiceSide fourth, DiceSide fifth, int expected) {
+        assertEquals(expected, new Yatzy1(DiceRolls
+                .first(first)
+                .second(second)
+                .third(third)
+                .fourth(fourth)
+                .fifth(fifth)
+        ).twos());
+    }
+
+    private static Stream<Arguments> provideRollsForTwos() {
+        return Stream.of(
+                Arguments.of(ONE, TWO, THREE, TWO, SIX, 4),
+                Arguments.of(TWO, TWO, TWO, TWO, TWO, 10)
+        );
+    }
+
+
+    @ParameterizedTest
+    @MethodSource("provideRollsForThrees")
+    public void threes_scores_the_sum_of_threes(DiceSide first, DiceSide second, DiceSide third, DiceSide fourth, DiceSide fifth, int expected) {
+        assertEquals(expected, new Yatzy1(DiceRolls
+                .first(first)
+                .second(second)
+                .third(third)
+                .fourth(fourth)
+                .fifth(fifth)
+        ).threes());
+    }
+
+    private static Stream<Arguments> provideRollsForThrees() {
+        return Stream.of(
+                Arguments.of(ONE, TWO, THREE, TWO, THREE, 6),
+                Arguments.of(TWO, THREE, THREE, THREE, THREE, 12)
+        );
+    }
+
+
+    @ParameterizedTest
+    @MethodSource("provideRollsForFours")
+    public void fours_scores_the_sum_of_fours(DiceSide first, DiceSide second, DiceSide third, DiceSide fourth, DiceSide fifth, int expected) {
+        assertEquals(expected, new Yatzy1(DiceRolls
+                .first(first)
+                .second(second)
+                .third(third)
+                .fourth(fourth)
+                .fifth(fifth)
+        ).fours());
+    }
+
+    private static Stream<Arguments> provideRollsForFours() {
+        return Stream.of(
+                Arguments.of(FOUR, FOUR, FOUR, FIVE, FIVE, 12),
+                Arguments.of(FOUR, FOUR, FIVE, FIVE, FIVE, 8),
+                Arguments.of(FOUR, FIVE, FIVE, FIVE, FIVE, 4)
+        );
+    }
+
+
+    @ParameterizedTest
+    @MethodSource("provideRollsForFives")
+    public void fives_scores_the_sum_of_fives(DiceSide first, DiceSide second, DiceSide third, DiceSide fourth, DiceSide fifth, int expected) {
+        assertEquals(expected, new Yatzy1(DiceRolls
+                .first(first)
+                .second(second)
+                .third(third)
+                .fourth(fourth)
+                .fifth(fifth)
+        ).fives());
+    }
+
+    private static Stream<Arguments> provideRollsForFives() {
+        return Stream.of(
+                Arguments.of(FOUR, FOUR, FOUR, FIVE, FIVE, 10),
+                Arguments.of(FOUR, FOUR, FIVE, FIVE, FIVE, 15),
+                Arguments.of(FOUR, FIVE, FIVE, FIVE, FIVE, 20)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideRollsForSixes")
+    public void sixes_scores_the_sum_of_sixes(DiceSide first, DiceSide second, DiceSide third, DiceSide fourth, DiceSide fifth, int expected) {
+        assertEquals(expected, new Yatzy1(DiceRolls
+                .first(first)
+                .second(second)
+                .third(third)
+                .fourth(fourth)
+                .fifth(fifth)
+        ).sixes());
+    }
+
+    private static Stream<Arguments> provideRollsForSixes() {
+        return Stream.of(
+                Arguments.of(FOUR, FOUR, FOUR, FIVE, FIVE, 0),
+                Arguments.of(FOUR, FOUR, SIX, FIVE, FIVE, 6),
+                Arguments.of(SIX, FIVE, SIX, SIX, FIVE, 18)
+        );
+    }
+
+
+    @ParameterizedTest
+    @MethodSource("provideRollsForPair")
+    public void pair_scores_the_sum_of_the_highest_pair(DiceSide first, DiceSide second, DiceSide third, DiceSide fourth, DiceSide fifth, int expected) {
+        assertEquals(expected, new Yatzy1(DiceRolls
+                .first(first)
+                .second(second)
+                .third(third)
+                .fourth(fourth)
+                .fifth(fifth)
+        ).pair());
+    }
+
+    private static Stream<Arguments> provideRollsForPair() {
+        return Stream.of(
+                Arguments.of(THREE, FOUR, THREE, FIVE, SIX, 6),
+                Arguments.of(FIVE, THREE, THREE, THREE, FIVE, 10),
+                Arguments.of(FIVE, THREE, SIX, SIX, FIVE, 12)
+        );
+    }
+
+
+    @ParameterizedTest
+    @MethodSource("provideRollsForTwoPairs")
+    public void two_pairs_scores_the_sum_of_pairs(DiceSide first, DiceSide second, DiceSide third, DiceSide fourth, DiceSide fifth, int expected) {
+        assertEquals(expected, new Yatzy1(DiceRolls
+                .first(first)
+                .second(second)
+                .third(third)
+                .fourth(fourth)
+                .fifth(fifth)
+        ).twoPairs());
+    }
+
+    private static Stream<Arguments> provideRollsForTwoPairs() {
+        return Stream.of(
+                Arguments.of(THREE, THREE, FIVE, FOUR, FIVE, 16),
+                Arguments.of(THREE, THREE, FIVE, FIVE, FIVE, 16),
+                Arguments.of(THREE, THREE, THREE, THREE, ONE, 0)
+        );
+    }
+
+
+    @ParameterizedTest
+    @MethodSource("provideRollsForThreeOfAKind")
+    public void three_of_a_kind_sums_three_repeated_sides(DiceSide first, DiceSide second, DiceSide third, DiceSide fourth, DiceSide fifth, int expected) {
+        assertEquals(expected, new Yatzy1(DiceRolls
+                .first(first)
+                .second(second)
+                .third(third)
+                .fourth(fourth)
+                .fifth(fifth)
+        ).threeOfAKind());
+    }
+
+    private static Stream<Arguments> provideRollsForThreeOfAKind() {
+        return Stream.of(
+                Arguments.of(THREE, THREE, THREE, FOUR, FIVE, 9),
+                Arguments.of(FIVE, THREE, FIVE, FOUR, FIVE, 15),
+                Arguments.of(THREE, THREE, THREE, THREE, FIVE, 9)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideRollsForFourOfAKind")
+    public void four_of_a_kind_sums_four_repeated_sides(DiceSide first, DiceSide second, DiceSide third, DiceSide fourth, DiceSide fifth, int expected) {
+        assertEquals(expected, new Yatzy1(DiceRolls
+                .first(first)
+                .second(second)
+                .third(third)
+                .fourth(fourth)
+                .fifth(fifth)
+        ).fourOfAKind());
+    }
+
+    private static Stream<Arguments> provideRollsForFourOfAKind() {
+        return Stream.of(
+                Arguments.of(THREE, THREE, THREE, THREE, FIVE, 12),
+                Arguments.of(FIVE, FIVE, FIVE, FOUR, FIVE, 20),
+                Arguments.of(THREE, THREE, THREE, THREE, THREE, 12)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideRollsForSmallStraight")
+    public void small_straight_sums_unique_side_up_to_five(DiceSide first, DiceSide second, DiceSide third, DiceSide fourth, DiceSide fifth, int expected) {
+        assertEquals(expected, new Yatzy1(DiceRolls
+                .first(first)
+                .second(second)
+                .third(third)
+                .fourth(fourth)
+                .fifth(fifth)
+        ).smallStraight());
+    }
+
+    private static Stream<Arguments> provideRollsForSmallStraight() {
+        return Stream.of(
+                Arguments.of(ONE, TWO, THREE, FOUR, FIVE, 15),
+                Arguments.of(TWO, THREE, FOUR, FIVE, ONE, 15),
+                Arguments.of(ONE, TWO, TWO, FOUR, FIVE, 0),
+                Arguments.of(TWO, THREE, FOUR, FIVE, SIX, 0)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideRollsForLargeStraight")
+    public void large_straight_sums_unique_sides_from_two_up(DiceSide first, DiceSide second, DiceSide third, DiceSide fourth, DiceSide fifth, int expected) {
+        assertEquals(expected, new Yatzy1(DiceRolls
+                .first(first)
+                .second(second)
+                .third(third)
+                .fourth(fourth)
+                .fifth(fifth)
+        ).largeStraight());
+
+    }
+
+    private static Stream<Arguments> provideRollsForLargeStraight() {
+        return Stream.of(
+                Arguments.of(SIX, TWO, THREE, FOUR, FIVE, 20),
+                Arguments.of(TWO, THREE, FOUR, FIVE, SIX, 20),
+                Arguments.of(ONE, TWO, TWO, FOUR, FIVE, 0),
+                Arguments.of(ONE, TWO, THREE, FOUR, FIVE, 0)
+        );
     }
 
     @Test
-    public void chance_scores_sum_of_all_dice() {
-        int expected = 15;
-        int actual = new Yatzy1(new DiceRolls(2, 3, 4, 5, 1)).chance();
-        assertEquals(expected, actual);
-        assertEquals(16, new Yatzy1(new DiceRolls(3, 3, 4, 5, 1)).chance());
-    }
-
-    @Test
-    public void yatzy_scores_50() {
-        int expected = 50;
-        int actual = new Yatzy1(new DiceRolls(4, 4, 4, 4, 4)).yatzy();
-        assertEquals(expected, actual);
-        assertEquals(50, new Yatzy1(new DiceRolls(6, 6, 6, 6, 6)).yatzy());
-        assertEquals(0, new Yatzy1(new DiceRolls(6, 6, 6, 6, 3)).yatzy());
-    }
-
-    @Test
-    public void test_1s() {
-        assertTrue(new Yatzy1(new DiceRolls(1, 2, 3, 4, 5)).ones() == 1);
-        assertEquals(2, new Yatzy1(new DiceRolls(1, 2, 1, 4, 5)).ones());
-        assertEquals(0, new Yatzy1(new DiceRolls(6, 2, 2, 4, 5)).ones());
-        assertEquals(4, new Yatzy1(new DiceRolls(1, 2, 1, 1, 1)).ones());
-    }
-
-    @Test
-    public void test_2s() {
-        assertEquals(4, new Yatzy1(new DiceRolls(1, 2, 3, 2, 6)).twos());
-        assertEquals(10, new Yatzy1(new DiceRolls(2, 2, 2, 2, 2)).twos());
-    }
-
-    @Test
-    public void test_threes() {
-        assertEquals(6, new Yatzy1(new DiceRolls(1, 2, 3, 2, 3)).threes());
-        assertEquals(12, new Yatzy1(new DiceRolls(2, 3, 3, 3, 3)).threes());
-    }
-
-    @Test
-    public void fours_test() {
-        assertEquals(12, new Yatzy1(new DiceRolls(4, 4, 4, 5, 5)).fours());
-        assertEquals(8, new Yatzy1(new DiceRolls(4, 4, 5, 5, 5)).fours());
-        assertEquals(4, new Yatzy1(new DiceRolls(4, 5, 5, 5, 5)).fours());
-    }
-
-    @Test
-    public void fives() {
-        assertEquals(10, new Yatzy1(new DiceRolls(4, 4, 4, 5, 5)).fives());
-        assertEquals(15, new Yatzy1(new DiceRolls(4, 4, 5, 5, 5)).fives());
-        assertEquals(20, new Yatzy1(new DiceRolls(4, 5, 5, 5, 5)).fives());
-    }
-
-    @Test
-    public void sixes_test() {
-        assertEquals(0, new Yatzy1(new DiceRolls(4, 4, 4, 5, 5)).sixes());
-        assertEquals(6, new Yatzy1(new DiceRolls(4, 4, 6, 5, 5)).sixes());
-        assertEquals(18, new Yatzy1(new DiceRolls(6, 5, 6, 6, 5)).sixes());
-    }
-
-    @Test
-    public void one_pair() {
-        assertEquals(6, new Yatzy1(new DiceRolls(3, 4, 3, 5, 6)).pair());
-        assertEquals(10, new Yatzy1(new DiceRolls(5, 3, 3, 3, 5)).pair());
-        assertEquals(12, new Yatzy1(new DiceRolls(5, 3, 6, 6, 5)).pair());
-    }
-
-    @Test
-    public void two_Pair() {
-        assertEquals(16, new Yatzy1(new DiceRolls(3, 3, 5, 4, 5)).twoPairs());
-        assertEquals(16, new Yatzy1(new DiceRolls(3, 3, 5, 5, 5)).twoPairs());
-        assertEquals(0, new Yatzy1(new DiceRolls(3, 3, 3, 3, 1)).twoPairs());
-
-    }
-
-    @Test
-    public void three_of_a_kind() {
-        assertEquals(9, new Yatzy1(new DiceRolls(3, 3, 3, 4, 5)).threeOfAKind());
-        assertEquals(15, new Yatzy1(new DiceRolls(5, 3, 5, 4, 5)).threeOfAKind());
-        assertEquals(9, new Yatzy1(new DiceRolls(3, 3, 3, 3, 5)).threeOfAKind());
-
-    }
-
-    @Test
-    public void four_of_a_kind() {
-        assertEquals(12, new Yatzy1(new DiceRolls(3, 3, 3, 3, 5)).fourOfAKind());
-        assertEquals(20, new Yatzy1(new DiceRolls(5, 5, 5, 4, 5)).fourOfAKind());
-        assertEquals(12, new Yatzy1(new DiceRolls(3, 3, 3, 3, 3)).fourOfAKind());
-    }
-
-    @Test
-    public void smallStraight() {
-        assertEquals(15, new Yatzy1(new DiceRolls(1, 2, 3, 4, 5)).smallStraight());
-        assertEquals(15, new Yatzy1(new DiceRolls(2, 3, 4, 5, 1)).smallStraight());
-        assertEquals(0, new Yatzy1(new DiceRolls(1, 2, 2, 4, 5)).smallStraight());
-        assertEquals(0, new Yatzy1(new DiceRolls(2, 3, 4, 5, 6)).smallStraight());
-    }
-
-    @Test
-    public void largeStraight() {
-        assertEquals(20, new Yatzy1(new DiceRolls(6, 2, 3, 4, 5)).largeStraight());
-        assertEquals(20, new Yatzy1(new DiceRolls(2, 3, 4, 5, 6)).largeStraight());
-        assertEquals(0, new Yatzy1(new DiceRolls(1, 2, 2, 4, 5)).largeStraight());
-        assertEquals(0, new Yatzy1(new DiceRolls(1, 2, 3, 4, 5)).largeStraight());
-
-    }
-
-    @Test
-    public void fullHouse() {
-        assertEquals(18, new Yatzy1(new DiceRolls(6, 2, 2, 2, 6)).fullHouse());
-        assertEquals(0, new Yatzy1(new DiceRolls(2, 3, 4, 5, 6)).fullHouse());
+    public void full_house_sums_pair_and_triad() {
+        assertEquals(18, new Yatzy1(DiceRolls
+                .first(SIX)
+                .second(TWO)
+                .third(TWO)
+                .fourth(TWO)
+                .fifth(SIX)
+        ).fullHouse());
+        assertEquals(0, new Yatzy1(DiceRolls
+                .first(SIX)
+                .second(THREE)
+                .third(FOUR)
+                .fourth(FIVE)
+                .fifth(SIX)
+        ).fullHouse());
     }
 }
